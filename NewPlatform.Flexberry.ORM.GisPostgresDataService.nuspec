@@ -1,31 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>NewPlatform.Flexberry.ORM.GisMSSQLDataService</id>
-    <version>1.0.0-alpha06</version>
-    <title>Flexberry ORM GisMSSQLDataService</title>
+    <id>NewPlatform.Flexberry.ORM.GisPostgresDataService</id>
+    <version>1.0.0-alpha01</version>
+    <title>Flexberry ORM GisPostgresDataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
     <licenseUrl>http://flexberry.ru/License-FlexberryOrm-Runtime</licenseUrl>
     <projectUrl>http://flexberry.net/FlexberryORM</projectUrl>
     <iconUrl>http://flexberry.net/portals/_default/skins/flexerry/images/logo_last.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
-    <description>Flexberry ORM GisMSSQLDataService Package.</description>
+    <description>Flexberry ORM GisPostgresDataService Package.</description>
     <releaseNotes>
-      1) Add read and write support for geography type.
-      2) Add support geography type for LINQProvider.
-      3) Fix update error.
+      1) Add support geography type for LINQProvider.
     </releaseNotes>
     <copyright>Copyright New Platform Ltd 2017</copyright>
-    <tags>Flexberry ORM Gis GisMSSQLDataService</tags>
+    <tags>Flexberry ORM Gis GisPostgresDataService</tags>
     <dependencies>
       <dependency id="Microsoft.Spatial" version="6.15.0" />
       <dependency id="NewPlatform.Flexberry.ORM" version="4.1.0-beta02" />
-      <dependency id="Microsoft.SqlServer.Types" version="10.50.1600.1" />
     </dependencies>
   </metadata>
   <files>
-    <file src="NewPlatform.Flexberry.ORM.GisMSSQLDataService.dll" target="lib\net45\NewPlatform.Flexberry.ORM.GisMSSQLDataService.dll" />
-    <file src="NewPlatform.Flexberry.ORM.GisMSSQLDataService.xml" target="lib\net45\NewPlatform.Flexberry.ORM.GisMSSQLDataService.xml" />
+    <file src="NewPlatform.Flexberry.ORM.GisPostgresDataService.dll" target="lib\net45\NewPlatform.Flexberry.ORM.GisPostgresDataService.dll" />
+    <file src="NewPlatform.Flexberry.ORM.GisPostgresDataService.xml" target="lib\net45\NewPlatform.Flexberry.ORM.GisPostgresDataService.xml" />
   </files>
 </package>
