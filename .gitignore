@@ -1,0 +1,7 @@
+/packages/
+*/bin/
+*/obj/
+*/*/obj/
+.vs
+*/*/FakesAssemblies/
+*.sln.DotSettings.user
