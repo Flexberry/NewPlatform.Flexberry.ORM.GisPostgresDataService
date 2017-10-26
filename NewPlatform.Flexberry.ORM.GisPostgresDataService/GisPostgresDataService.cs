@@ -1,21 +1,19 @@
 ﻿namespace NewPlatform.Flexberry.ORM
 {
+    using System;
+    using System.Linq;
+    using System.Text;
+
+    using Microsoft.Spatial;
+
     using ICSSoft.STORMNET.Business;
+    using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
+    using ICSSoft.STORMNET.Security;
     using ICSSoft.STORMNET.Windows.Forms;
-    using Microsoft.Spatial;
-    using NpgsqlTypes;
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Data;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Text.RegularExpressions;
-    using System.Threading.Tasks;
+
     using STORMDO = ICSSoft.STORMNET;
 
     /// <summary>
@@ -23,6 +21,32 @@
     /// </summary>
     public class GisPostgresDataService : PostgresDataService
     {
+
+        /// <summary>
+        /// Создание сервиса данных для PostgreSQL без параметров.
+        /// </summary>
+        public GisPostgresDataService()
+        {
+        }
+
+        /// <summary>
+        /// Создание сервиса данных для PostgreSQL с указанием настроек проверки полномочий.
+        /// </summary>
+        /// <param name="securityManager">Сконструированный менеджер полномочий.</param>
+        public GisPostgresDataService(ISecurityManager securityManager)
+            : base(securityManager)
+        {
+        }
+
+        /// <summary>
+        /// Создание сервиса данных для PostgreSQL с указанием настроек проверки полномочий.
+        /// </summary>
+        /// <param name="securityManager">Сенеджер полномочий.</param>
+        /// <param name="auditService">Сервис аудита.</param>
+        public GisPostgresDataService(ISecurityManager securityManager, IAuditService auditService)
+            : base(securityManager, auditService)
+        {
+        }
 
         /// <summary>
         /// Этот метод переопределён, чтобы подключить правильную подготовку гео-данных в запросе.
