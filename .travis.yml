@@ -1,0 +1,2 @@
+language: csharp
+solution: NewPlatform.Flexberry.ORM.GisPostgresDataService.sln
