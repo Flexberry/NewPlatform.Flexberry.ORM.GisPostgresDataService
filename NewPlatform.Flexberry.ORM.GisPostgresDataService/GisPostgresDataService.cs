@@ -158,7 +158,6 @@
             {
                 VariableDef varDef = null;
                 Geography geo = null;
-                Geometry geom = null;
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is Geography)
                 {
                     varDef = value.Parameters[0] as VariableDef;
@@ -173,20 +172,34 @@
                 {
                     return $"ST_Intersects({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
+                if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
+                {
+                    varDef = value.Parameters[0] as VariableDef;
+                    VariableDef varDef2 = value.Parameters[1] as VariableDef;
+                    return $"ST_Intersects({varDef.StringedView},{varDef2.StringedView})";
+                }
+                geo = value.Parameters[0] as Geography;
+                var geo2 = value.Parameters[0] as Geography;
+                return $"ST_Intersects(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
+            }
 
+            if (value.FunctionDef.StringedView == "GeomIntersects")
+            {
+                VariableDef varDef = null;
+                Geometry geo = null;
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is Geometry)
                 {
                     varDef = value.Parameters[0] as VariableDef;
-                    geom = value.Parameters[1] as Geometry;
+                    geo = value.Parameters[1] as Geometry;
                 }
-                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geometry)
+                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geography)
                 {
                     varDef = value.Parameters[1] as VariableDef;
-                    geom = value.Parameters[0] as Geometry;
+                    geo = value.Parameters[0] as Geometry;
                 }
-                if (varDef != null && geom != null)
+                if (varDef != null && geo != null)
                 {
-                    return $"ST_Intersects({varDef.StringedView},ST_GeomFromEWKT('{geom.GetEWKT()}'))";
+                    return $"ST_Intersects({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
                 {
@@ -194,14 +207,8 @@
                     VariableDef varDef2 = value.Parameters[1] as VariableDef;
                     return $"ST_Intersects({varDef.StringedView},{varDef2.StringedView})";
                 }
-                if (value.Parameters[0] is Geometry)
-                {
-                    geom = value.Parameters[0] as Geometry;
-                    var geom2 = value.Parameters[0] as Geometry;
-                    return $"ST_Intersects(ST_GeomFromEWKT('{geom.GetEWKT()}'),ST_GeomFromEWKT('{geom2.GetEWKT()}'))";
-                }
-                geo = value.Parameters[0] as Geography;
-                var geo2 = value.Parameters[0] as Geography;
+                geo = value.Parameters[0] as Geometry;
+                var geo2 = value.Parameters[0] as Geometry;
                 return $"ST_Intersects(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
             }
 
