@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>NewPlatform.Flexberry.ORM.GisPostgresDataService</id>
-    <version>1.0.0-alpha02</version>
+    <version>1.0.0-alpha03</version>
     <title>Flexberry ORM GisPostgresDataService</title>
     <authors>New Platform Ltd.</authors>
     <owners>New Platform Ltd.</owners>
@@ -14,6 +14,7 @@
     <releaseNotes>
       1) Add support geography type for LINQProvider.
       2) Add constructor overrides with security manager.
+      3) Add Geometry type support.
     </releaseNotes>
     <copyright>Copyright New Platform Ltd 2017</copyright>
     <tags>Flexberry ORM Gis GisPostgresDataService</tags>
