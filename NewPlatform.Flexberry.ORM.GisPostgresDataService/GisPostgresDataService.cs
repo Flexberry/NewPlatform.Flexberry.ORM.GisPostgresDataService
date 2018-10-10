@@ -192,7 +192,7 @@
                     varDef = value.Parameters[0] as VariableDef;
                     geo = value.Parameters[1] as Geometry;
                 }
-                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geography)
+                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geometry)
                 {
                     varDef = value.Parameters[1] as VariableDef;
                     geo = value.Parameters[0] as Geometry;
