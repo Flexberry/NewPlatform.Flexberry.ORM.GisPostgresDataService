@@ -5,3 +5,4 @@
 .vs
 */*/FakesAssemblies/
 *.sln.DotSettings.user
+/NewPlatform.Flexberry.ORM.GisPostgresDataService/NewPlatform.Flexberry.ORM.GisPostgresDataService.xml
