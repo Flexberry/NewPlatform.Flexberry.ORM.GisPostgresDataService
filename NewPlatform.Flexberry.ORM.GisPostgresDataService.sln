@@ -7,11 +7,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		CHANGELOG.md = CHANGELOG.md
 		LICENSE.md = LICENSE.md
-		NewPlatform.Flexberry.ORM.GisPostgresDataService.nuspec = NewPlatform.Flexberry.ORM.GisPostgresDataService.nuspec
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.GisPostgresDataService", "NewPlatform.Flexberry.ORM.GisPostgresDataService\NewPlatform.Flexberry.ORM.GisPostgresDataService.csproj", "{C7433460-8306-49ED-93E8-89435EACD95A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NewPlatform.Flexberry.ORM.GisPostgresDataService", "NewPlatform.Flexberry.ORM.GisPostgresDataService\NewPlatform.Flexberry.ORM.GisPostgresDataService.csproj", "{C7433460-8306-49ED-93E8-89435EACD95A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
