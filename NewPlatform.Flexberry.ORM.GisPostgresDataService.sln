@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31321.278
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewPlatform.Flexberry.ORM.GisPostgresDataService", "NewPlatform.Flexberry.ORM.GisPostgresDataService\NewPlatform.Flexberry.ORM.GisPostgresDataService.csproj", "{2342564B-43C0-4D2F-9C9B-C737526F2428}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8F38465B-3D9A-481D-B696-82B867EF2771}"
 	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build.yml = .github\workflows\build.yml
 		CHANGELOG.md = CHANGELOG.md
 		LICENSE.md = LICENSE.md
 		NewPlatform.Flexberry.ORM.GisPostgresDataService.nuspec = NewPlatform.Flexberry.ORM.GisPostgresDataService.nuspec
@@ -26,5 +27,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EB7B0C23-FC9D-4361-A52D-217835FCC88B}
 	EndGlobalSection
 EndGlobal
