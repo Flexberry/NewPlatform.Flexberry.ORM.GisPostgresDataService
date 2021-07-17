@@ -201,7 +201,7 @@
                 }
 
                 geo = value.Parameters[0] as Geography;
-                var geo2 = value.Parameters[0] as Geography;
+                var geo2 = value.Parameters[1] as Geography;
                 return $"{stFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
             }
 
@@ -209,6 +209,7 @@
             {
                 VariableDef varDef = null;
                 Geometry geo = null;
+
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is Geometry)
                 {
                     varDef = value.Parameters[0] as VariableDef;
@@ -233,7 +234,7 @@
                 }
 
                 geo = value.Parameters[0] as Geometry;
-                var geo2 = value.Parameters[0] as Geometry;
+                var geo2 = value.Parameters[1] as Geometry;
                 return $"{stFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
             }
 
