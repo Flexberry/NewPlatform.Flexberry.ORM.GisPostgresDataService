@@ -4,8 +4,6 @@
     using System.Linq;
     using System.Text;
 
-    using Microsoft.Spatial;
-
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
@@ -14,6 +12,8 @@
     using ICSSoft.STORMNET.Security;
     using ICSSoft.STORMNET.Windows.Forms;
 
+    using Microsoft.Spatial;
+
     using STORMDO = ICSSoft.STORMNET;
 
     /// <summary>
@@ -21,7 +21,6 @@
     /// </summary>
     public class GisPostgresDataService : PostgresDataService
     {
-
         /// <summary>
         /// Создание сервиса данных для PostgreSQL без параметров.
         /// </summary>
@@ -107,6 +106,8 @@
                 {
                     selectClause.Append(sql.Substring(lastPos, pos - lastPos));
                 }
+
+                // The SQL-expression returns EWKT representation of the property value.
                 selectClause.Append(sql.Substring(pos, scanText.Length).Replace(propName, $"ST_AsEWKT({propName}) as {propName}"));
                 lastPos = pos + scanText.Length;
             }
@@ -118,12 +119,11 @@
             return sql;
         }
 
-
         /// <summary>
-        /// конвертация значений в строки запроса
+        /// Осуществляет конвертацию заданного значения в строку запроса.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">Значение для конвертации.</param>
+        /// <returns>Строка запроса.</returns>
         public override string ConvertValueToQueryValueString(object value)
         {
             if (value != null && value.GetType().IsSubclassOf(typeof(Geography)))
@@ -140,13 +140,13 @@
         }
 
         /// <summary>
-        /// Преобразовать значение в SQL строку
+        /// Осуществляет преобразование заданного значения в SQL-строку.
         /// </summary>
-        /// <param name="sqlLangDef">Определение языка ограничений</param>
-        /// <param name="value">Функция</param>
-        /// <param name="convertValue">делегат для преобразования констант</param>
-        /// <param name="convertIdentifier">делегат для преобразования идентификаторов</param>
-        /// <returns></returns>
+        /// <param name="sqlLangDef">Определение языка ограничений.</param>
+        /// <param name="value">Ограничивающая функция.</param>
+        /// <param name="convertValue">Делегат для преобразования констант.</param>
+        /// <param name="convertIdentifier">Делегат для преобразования идентификаторов.</param>
+        /// <returns>Результирующая SQL-строка.</returns>
         public override string FunctionToSql(
             SQLWhereLanguageDef sqlLangDef,
             Function value,
