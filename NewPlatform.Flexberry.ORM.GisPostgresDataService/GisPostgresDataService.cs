@@ -157,19 +157,19 @@
             const string GeomDistance = "GeomDistance";
             const string GeoIntersects = "GeoIntersects";
             const string GeomIntersects = "GeomIntersects";
-            const string STFunctionDistance = "ST_Distance";
-            const string STFunctionIntersects = "ST_Intersects";
+            const string SqlDistanceFunction = "ST_Distance";
+            const string SqlIntersectsFunction = "ST_Intersects";
 
             ExternalLangDef langDef = sqlLangDef as ExternalLangDef;
-            string stFunction = null;
+            var sqlFunction = string.Empty;
 
             if (value.FunctionDef.StringedView == GeoDistance || value.FunctionDef.StringedView == GeomDistance)
             {
-                stFunction = STFunctionDistance;
+                sqlFunction = SqlDistanceFunction;
             }
             else if (value.FunctionDef.StringedView == GeoIntersects || value.FunctionDef.StringedView == GeomIntersects)
             {
-                stFunction = STFunctionIntersects;
+                sqlFunction = SqlIntersectsFunction;
             }
 
             if (value.FunctionDef.StringedView == GeoDistance || value.FunctionDef.StringedView == GeoIntersects)
@@ -190,19 +190,19 @@
 
                 if (varDef != null && geo != null)
                 {
-                    return $"{stFunction}({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
+                    return $"{sqlFunction}({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
 
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
                 {
                     varDef = value.Parameters[0] as VariableDef;
                     VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    return $"{stFunction}({varDef.StringedView},{varDef2.StringedView})";
+                    return $"{sqlFunction}({varDef.StringedView},{varDef2.StringedView})";
                 }
 
                 geo = value.Parameters[0] as Geography;
                 var geo2 = value.Parameters[1] as Geography;
-                return $"{stFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
+                return $"{sqlFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
             }
 
             if (value.FunctionDef.StringedView == GeomDistance || value.FunctionDef.StringedView == GeomIntersects)
@@ -223,19 +223,19 @@
 
                 if (varDef != null && geo != null)
                 {
-                    return $"{stFunction}({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
+                    return $"{sqlFunction}({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
 
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
                 {
                     varDef = value.Parameters[0] as VariableDef;
                     VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    return $"{stFunction}({varDef.StringedView},{varDef2.StringedView})";
+                    return $"{sqlFunction}({varDef.StringedView},{varDef2.StringedView})";
                 }
 
                 geo = value.Parameters[0] as Geometry;
                 var geo2 = value.Parameters[1] as Geometry;
-                return $"{stFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
+                return $"{sqlFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
             }
 
             return base.FunctionToSql(sqlLangDef, value, convertValue, convertIdentifier);
