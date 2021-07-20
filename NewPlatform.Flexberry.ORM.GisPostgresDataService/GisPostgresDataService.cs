@@ -22,6 +22,7 @@
     public class GisPostgresDataService : PostgresDataService
     {
         private const string SqlGeographyTypecast = "::geography";
+        private const string SqlGeometryTypecast = "::geometry";
 
         /// <summary>
         /// Создание сервиса данных для PostgreSQL без параметров.
@@ -128,17 +129,8 @@
         /// <returns>Строка запроса.</returns>
         public override string ConvertValueToQueryValueString(object value)
         {
-            if (value != null && value.GetType().IsSubclassOf(typeof(Geography)))
-            {
-                Geography geo = value as Geography;
-                return $"ST_GeomFromEWKT('{geo.GetEWKT()}')";
-            }
-            if (value != null && value.GetType().IsSubclassOf(typeof(Geometry)))
-            {
-                Geometry geo = value as Geometry;
-                return $"ST_GeomFromEWKT('{geo.GetEWKT()}')";
-            }
-            return base.ConvertValueToQueryValueString(value);
+            // Assume the value is always stored as geometry.
+            return ConvertValue(value, true);
         }
 
         /// <summary>
@@ -195,7 +187,7 @@
                     string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
 
                     // Assume the return value of {sqlIdent} SQL-expression is geometry.
-                    return $"{sqlFunction}({sqlIdent}{SqlGeographyTypecast},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
+                    return $"{sqlFunction}({sqlIdent}{SqlGeographyTypecast},{ConvertValue(geo, false)})";
                 }
 
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
@@ -211,7 +203,7 @@
 
                 geo = value.Parameters[0] as Geography;
                 var geo2 = value.Parameters[1] as Geography;
-                return $"{sqlFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
+                return $"{sqlFunction}({ConvertValue(geo, false)},{ConvertValue(geo2, false)})";
             }
 
             if (value.FunctionDef.StringedView == GeomDistance || value.FunctionDef.StringedView == GeomIntersects)
@@ -235,7 +227,7 @@
                     string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
 
                     // Assume the return value of {sqlIdent} SQL-expression is geometry.
-                    return $"{sqlFunction}({sqlIdent},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
+                    return $"{sqlFunction}({sqlIdent},{convertValue(geo)})";
                 }
 
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
@@ -251,10 +243,27 @@
 
                 geo = value.Parameters[0] as Geometry;
                 var geo2 = value.Parameters[1] as Geometry;
-                return $"{sqlFunction}(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
+                return $"{sqlFunction}({convertValue(geo)},{convertValue(geo2)})";
             }
 
             return base.FunctionToSql(sqlLangDef, value, convertValue, convertIdentifier);
+        }
+
+        private string ConvertValue(object value, bool convertGeographyToGeometry)
+        {
+            if (value != null && value.GetType().IsSubclassOf(typeof(Geography)))
+            {
+                Geography geo = value as Geography;
+                return $"'{geo.GetEWKT()}'{(convertGeographyToGeometry ? SqlGeometryTypecast : SqlGeographyTypecast)}";
+            }
+
+            if (value != null && value.GetType().IsSubclassOf(typeof(Geometry)))
+            {
+                Geometry geo = value as Geometry;
+                return $"'{geo.GetEWKT()}'{SqlGeometryTypecast}";
+            }
+
+            return base.ConvertValueToQueryValueString(value);
         }
     }
 }
