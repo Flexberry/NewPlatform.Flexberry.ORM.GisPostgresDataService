@@ -92,7 +92,7 @@
                 }
                 if (propStorage == null || propStorage.propertyType != typeof(Geography) && propStorage.propertyType != typeof(Geometry))
                     continue;
-                var propName = PutIdentifierIntoBrackets(prop.Name);
+                var propName = PutIdentifierIntoBrackets(prop.Name, true);
                 var scanText = $"{propName},";
                 int pos = sql.IndexOf(scanText, lastPos);
                 if (pos == -1)
@@ -190,14 +190,17 @@
 
                 if (varDef != null && geo != null)
                 {
-                    return $"{sqlFunction}({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
+                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
+                    return $"{sqlFunction}({sqlIdent},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
 
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
                 {
                     varDef = value.Parameters[0] as VariableDef;
                     VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    return $"{sqlFunction}({varDef.StringedView},{varDef2.StringedView})";
+                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
+                    string sqlIdent2 = PutIdentifierIntoBrackets(varDef2.StringedView, true);
+                    return $"{sqlFunction}({sqlIdent},{sqlIdent2})";
                 }
 
                 geo = value.Parameters[0] as Geography;
@@ -223,14 +226,17 @@
 
                 if (varDef != null && geo != null)
                 {
-                    return $"{sqlFunction}({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
+                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
+                    return $"{sqlFunction}({sqlIdent},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
 
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
                 {
                     varDef = value.Parameters[0] as VariableDef;
                     VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    return $"{sqlFunction}({varDef.StringedView},{varDef2.StringedView})";
+                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
+                    string sqlIdent2 = PutIdentifierIntoBrackets(varDef2.StringedView, true);
+                    return $"{sqlFunction}({sqlIdent},{sqlIdent2})";
                 }
 
                 geo = value.Parameters[0] as Geometry;
