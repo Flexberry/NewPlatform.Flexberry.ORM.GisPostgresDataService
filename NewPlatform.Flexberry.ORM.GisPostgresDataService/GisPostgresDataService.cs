@@ -21,6 +21,8 @@
     /// </summary>
     public class GisPostgresDataService : PostgresDataService
     {
+        private const string SqlGeographyTypecast = "::geography";
+
         /// <summary>
         /// Создание сервиса данных для PostgreSQL без параметров.
         /// </summary>
@@ -191,7 +193,9 @@
                 if (varDef != null && geo != null)
                 {
                     string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
-                    return $"{sqlFunction}({sqlIdent},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
+
+                    // Assume the return value of {sqlIdent} SQL-expression is geometry.
+                    return $"{sqlFunction}({sqlIdent}{SqlGeographyTypecast},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
 
                 if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
@@ -200,7 +204,9 @@
                     VariableDef varDef2 = value.Parameters[1] as VariableDef;
                     string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
                     string sqlIdent2 = PutIdentifierIntoBrackets(varDef2.StringedView, true);
-                    return $"{sqlFunction}({sqlIdent},{sqlIdent2})";
+
+                    // Assume the return values of {sqlIdent}, {sqlIdent2} SQL-expressions are geometry.
+                    return $"{sqlFunction}({sqlIdent}{SqlGeographyTypecast},{sqlIdent2}{SqlGeographyTypecast})";
                 }
 
                 geo = value.Parameters[0] as Geography;
@@ -227,6 +233,8 @@
                 if (varDef != null && geo != null)
                 {
                     string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
+
+                    // Assume the return value of {sqlIdent} SQL-expression is geometry.
                     return $"{sqlFunction}({sqlIdent},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
                 }
 
@@ -236,6 +244,8 @@
                     VariableDef varDef2 = value.Parameters[1] as VariableDef;
                     string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
                     string sqlIdent2 = PutIdentifierIntoBrackets(varDef2.StringedView, true);
+
+                    // Assume the return values of {sqlIdent}, {sqlIdent2} SQL-expressions are geometry.
                     return $"{sqlFunction}({sqlIdent},{sqlIdent2})";
                 }
 
