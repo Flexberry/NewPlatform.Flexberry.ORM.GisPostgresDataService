@@ -147,12 +147,13 @@
             delegateConvertValueToQueryValueString convertValue,
             delegatePutIdentifierToBrackets convertIdentifier)
         {
-            const string GeoDistance = "GeoDistance";
-            const string GeomDistance = "GeomDistance";
-            const string GeoIntersects = "GeoIntersects";
-            const string GeomIntersects = "GeomIntersects";
             const string SqlDistanceFunction = "ST_Distance";
             const string SqlIntersectsFunction = "ST_Intersects";
+
+            if (sqlLangDef == null)
+            {
+                throw new ArgumentNullException(nameof(sqlLangDef));
+            }
 
             if (value == null)
             {
@@ -165,18 +166,19 @@
             }
 
             ExternalLangDef langDef = sqlLangDef as ExternalLangDef;
+
             var sqlFunction = string.Empty;
 
-            if (value.FunctionDef.StringedView == GeoDistance || value.FunctionDef.StringedView == GeomDistance)
+            if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeomDistance)
             {
                 sqlFunction = SqlDistanceFunction;
             }
-            else if (value.FunctionDef.StringedView == GeoIntersects || value.FunctionDef.StringedView == GeomIntersects)
+            else if (value.FunctionDef.StringedView == langDef.funcGeoIntersects || value.FunctionDef.StringedView == langDef.funcGeomIntersects)
             {
                 sqlFunction = SqlIntersectsFunction;
             }
 
-            if (value.FunctionDef.StringedView == GeoDistance || value.FunctionDef.StringedView == GeoIntersects)
+            if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeoIntersects)
             {
                 VariableDef varDef = null;
                 Geography geo = null;
@@ -216,7 +218,7 @@
                 return $"{sqlFunction}({ConvertValue(geo, false)},{ConvertValue(geo2, false)})";
             }
 
-            if (value.FunctionDef.StringedView == GeomDistance || value.FunctionDef.StringedView == GeomIntersects)
+            if (value.FunctionDef.StringedView == langDef.funcGeomDistance || value.FunctionDef.StringedView == langDef.funcGeomIntersects)
             {
                 VariableDef varDef = null;
                 Geometry geo = null;
