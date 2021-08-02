@@ -263,16 +263,14 @@
 
         private string ConvertValue(object value, bool convertGeographyToGeometry)
         {
-            if (value != null && value.GetType().IsSubclassOf(typeof(Geography)))
+            if (value is Geography geo)
             {
-                Geography geo = value as Geography;
                 return $"'{geo.GetEWKT()}'{(convertGeographyToGeometry ? SqlGeometryTypecast : SqlGeographyTypecast)}";
             }
 
-            if (value != null && value.GetType().IsSubclassOf(typeof(Geometry)))
+            if (value is Geometry geom)
             {
-                Geometry geo = value as Geometry;
-                return $"'{geo.GetEWKT()}'{SqlGeometryTypecast}";
+                return $"'{geom.GetEWKT()}'{SqlGeometryTypecast}";
             }
 
             return base.ConvertValueToQueryValueString(value);
