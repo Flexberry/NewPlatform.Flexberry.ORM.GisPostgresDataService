@@ -184,10 +184,12 @@
                 }
 
                 var sqlParameters = new string[2];
-                sqlParameters[0] = value.Parameters[0] is VariableDef vd0 ?
-                    $"{PutIdentifierIntoBrackets(vd0.StringedView, true)}{sqlTypecast}" : ConvertValue(value.Parameters[0], convertGeographyToGeometry);
-                sqlParameters[1] = value.Parameters[1] is VariableDef vd1 ?
-                    $"{PutIdentifierIntoBrackets(vd1.StringedView, true)}{sqlTypecast}" : ConvertValue(value.Parameters[1], convertGeographyToGeometry);
+                sqlParameters[0] = value.Parameters[0] is VariableDef vd0
+                    ? $"{PutIdentifierIntoBrackets(vd0.StringedView, true)}{sqlTypecast}"
+                    : ConvertValue(value.Parameters[0], convertGeographyToGeometry);
+                sqlParameters[1] = value.Parameters[1] is VariableDef vd1
+                    ? $"{PutIdentifierIntoBrackets(vd1.StringedView, true)}{sqlTypecast}"
+                    : ConvertValue(value.Parameters[1], convertGeographyToGeometry);
 
                 return $"{sqlFunction}({sqlParameters[0]},{sqlParameters[1]})";
             }
