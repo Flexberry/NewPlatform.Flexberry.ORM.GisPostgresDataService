@@ -160,15 +160,9 @@
                 throw new ArgumentNullException(nameof(value));
             }
 
-            if (convertValue == null)
-            {
-                throw new ArgumentNullException(nameof(convertValue));
-            }
-
             ExternalLangDef langDef = sqlLangDef as ExternalLangDef;
 
             var sqlFunction = string.Empty;
-
             if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeomDistance)
             {
                 sqlFunction = SqlDistanceFunction;
@@ -178,84 +172,24 @@
                 sqlFunction = SqlIntersectsFunction;
             }
 
-            if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeoIntersects)
+            if (!string.IsNullOrEmpty(sqlFunction))
             {
-                VariableDef varDef = null;
-                Geography geo = null;
-
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is Geography)
+                var sqlTypecast = string.Empty;
+                var convertGeographyToGeometry = true;
+                if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeoIntersects)
                 {
-                    varDef = value.Parameters[0] as VariableDef;
-                    geo = value.Parameters[1] as Geography;
-                }
-                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geography)
-                {
-                    varDef = value.Parameters[1] as VariableDef;
-                    geo = value.Parameters[0] as Geography;
+                    // Assume the return value of SQL-expression for identifier is geometry and needs typecast.
+                    sqlTypecast = SqlGeographyTypecast;
+                    convertGeographyToGeometry = false;
                 }
 
-                if (varDef != null && geo != null)
-                {
-                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
+                var sqlParameters = new string[2];
+                sqlParameters[0] = value.Parameters[0] is VariableDef ?
+                    $"{PutIdentifierIntoBrackets((value.Parameters[0] as VariableDef).StringedView, true)}{sqlTypecast}" : ConvertValue(value.Parameters[0], convertGeographyToGeometry);
+                sqlParameters[1] = value.Parameters[1] is VariableDef ?
+                    $"{PutIdentifierIntoBrackets((value.Parameters[1] as VariableDef).StringedView, true)}{sqlTypecast}" : ConvertValue(value.Parameters[1], convertGeographyToGeometry);
 
-                    // Assume the return value of {sqlIdent} SQL-expression is geometry.
-                    return $"{sqlFunction}({sqlIdent}{SqlGeographyTypecast},{ConvertValue(geo, false)})";
-                }
-
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
-                {
-                    varDef = value.Parameters[0] as VariableDef;
-                    VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
-                    string sqlIdent2 = PutIdentifierIntoBrackets(varDef2.StringedView, true);
-
-                    // Assume the return values of {sqlIdent}, {sqlIdent2} SQL-expressions are geometry.
-                    return $"{sqlFunction}({sqlIdent}{SqlGeographyTypecast},{sqlIdent2}{SqlGeographyTypecast})";
-                }
-
-                geo = value.Parameters[0] as Geography;
-                var geo2 = value.Parameters[1] as Geography;
-                return $"{sqlFunction}({ConvertValue(geo, false)},{ConvertValue(geo2, false)})";
-            }
-
-            if (value.FunctionDef.StringedView == langDef.funcGeomDistance || value.FunctionDef.StringedView == langDef.funcGeomIntersects)
-            {
-                VariableDef varDef = null;
-                Geometry geo = null;
-
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is Geometry)
-                {
-                    varDef = value.Parameters[0] as VariableDef;
-                    geo = value.Parameters[1] as Geometry;
-                }
-                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geometry)
-                {
-                    varDef = value.Parameters[1] as VariableDef;
-                    geo = value.Parameters[0] as Geometry;
-                }
-
-                if (varDef != null && geo != null)
-                {
-                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
-
-                    // Assume the return value of {sqlIdent} SQL-expression is geometry.
-                    return $"{sqlFunction}({sqlIdent},{convertValue(geo)})";
-                }
-
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
-                {
-                    varDef = value.Parameters[0] as VariableDef;
-                    VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    string sqlIdent = PutIdentifierIntoBrackets(varDef.StringedView, true);
-                    string sqlIdent2 = PutIdentifierIntoBrackets(varDef2.StringedView, true);
-
-                    // Assume the return values of {sqlIdent}, {sqlIdent2} SQL-expressions are geometry.
-                    return $"{sqlFunction}({sqlIdent},{sqlIdent2})";
-                }
-
-                geo = value.Parameters[0] as Geometry;
-                var geo2 = value.Parameters[1] as Geometry;
-                return $"{sqlFunction}({convertValue(geo)},{convertValue(geo2)})";
+                return $"{sqlFunction}({sqlParameters[0]},{sqlParameters[1]})";
             }
 
             return base.FunctionToSql(sqlLangDef, value, convertValue, convertIdentifier);
