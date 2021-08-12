@@ -129,8 +129,8 @@
         /// <returns>Строка запроса.</returns>
         public override string ConvertValueToQueryValueString(object value)
         {
-            // Assume the value is always stored as geometry.
-            return ConvertValue(value, true);
+            // Assume further implicit typecast of the return value of the result SQL-expression.
+            return ConvertValue(value, false);
         }
 
         /// <summary>
@@ -177,13 +177,11 @@
                 // The type of the return value of the identifier SQL-expression depends on the identifier type
                 // and in certain cases requires explicit type cast in order to call proper SQL-function overload.
                 var sqlTypecast = string.Empty;
-                var convertGeographyToGeometry = true;
                 if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeoIntersects)
                 {
                     // The type of the return value of the identifier SQL-expression requires explicit type cast
                     // due a geography-function parameter of the geography type may be stored as the geometry type.
                     sqlTypecast = SqlGeographyTypecast;
-                    convertGeographyToGeometry = false;
                 }
 
                 var sqlParameters = new string[2];
@@ -191,7 +189,7 @@
                 {
                     sqlParameters[i] = value.Parameters[i] is VariableDef vd
                         ? $"{PutIdentifierIntoBrackets(vd.StringedView, true)}{sqlTypecast}"
-                        : ConvertValue(value.Parameters[i], convertGeographyToGeometry);
+                        : ConvertValue(value.Parameters[i], true);
                 }
 
                 return $"{sqlFunction}({sqlParameters[0]},{sqlParameters[1]})";
@@ -200,16 +198,16 @@
             return base.FunctionToSql(sqlLangDef, value, convertValue, convertIdentifier);
         }
 
-        private string ConvertValue(object value, bool convertGeographyToGeometry)
+        private string ConvertValue(object value, bool convertWithExplicitTypecast)
         {
             if (value is Geography geo)
             {
-                return $"'{geo.GetEWKT()}'{(convertGeographyToGeometry ? SqlGeometryTypecast : SqlGeographyTypecast)}";
+                return $"'{geo.GetEWKT()}'{(convertWithExplicitTypecast ? SqlGeographyTypecast : string.Empty)}";
             }
 
             if (value is Geometry geom)
             {
-                return $"'{geom.GetEWKT()}'{SqlGeometryTypecast}";
+                return $"'{geom.GetEWKT()}'{(convertWithExplicitTypecast ? SqlGeometryTypecast : string.Empty)}";
             }
 
             return base.ConvertValueToQueryValueString(value);
