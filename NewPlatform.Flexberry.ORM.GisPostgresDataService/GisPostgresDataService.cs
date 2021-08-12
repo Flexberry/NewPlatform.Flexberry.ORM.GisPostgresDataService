@@ -174,22 +174,25 @@
 
             if (!string.IsNullOrEmpty(sqlFunction))
             {
+                // The type of the return value of the identifier SQL-expression depends on the identifier type
+                // and in certain cases requires explicit type cast in order to call proper SQL-function overload.
                 var sqlTypecast = string.Empty;
                 var convertGeographyToGeometry = true;
                 if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeoIntersects)
                 {
-                    // Assume the return value of SQL-expression for identifier is geometry and needs typecast.
+                    // The type of the return value of the identifier SQL-expression requires explicit type cast
+                    // due a geography-function parameter of the geography type may be stored as the geometry type.
                     sqlTypecast = SqlGeographyTypecast;
                     convertGeographyToGeometry = false;
                 }
 
                 var sqlParameters = new string[2];
-                sqlParameters[0] = value.Parameters[0] is VariableDef vd0
-                    ? $"{PutIdentifierIntoBrackets(vd0.StringedView, true)}{sqlTypecast}"
-                    : ConvertValue(value.Parameters[0], convertGeographyToGeometry);
-                sqlParameters[1] = value.Parameters[1] is VariableDef vd1
-                    ? $"{PutIdentifierIntoBrackets(vd1.StringedView, true)}{sqlTypecast}"
-                    : ConvertValue(value.Parameters[1], convertGeographyToGeometry);
+                for (int i = 0; i < sqlParameters.Length; i++)
+                {
+                    sqlParameters[i] = value.Parameters[i] is VariableDef vd
+                        ? $"{PutIdentifierIntoBrackets(vd.StringedView, true)}{sqlTypecast}"
+                        : ConvertValue(value.Parameters[i], convertGeographyToGeometry);
+                }
 
                 return $"{sqlFunction}({sqlParameters[0]},{sqlParameters[1]})";
             }
