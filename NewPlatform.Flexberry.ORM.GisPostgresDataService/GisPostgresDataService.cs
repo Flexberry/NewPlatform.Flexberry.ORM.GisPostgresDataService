@@ -129,7 +129,7 @@
         /// <returns>Строка запроса.</returns>
         public override string ConvertValueToQueryValueString(object value)
         {
-            // Assume further implicit typecast of the return value of the result SQL-expression.
+            // Assume further implicit type cast of the return value of the result SQL-expression.
             return ConvertValue(value, false);
         }
 
