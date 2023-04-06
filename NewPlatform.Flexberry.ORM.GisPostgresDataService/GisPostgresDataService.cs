@@ -6,6 +6,7 @@
 
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.Audit;
+    using ICSSoft.STORMNET.Business.Interfaces;
     using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
     using ICSSoft.STORMNET.FunctionalLanguage;
     using ICSSoft.STORMNET.FunctionalLanguage.SQLWhere;
@@ -25,28 +26,13 @@
         private const string SqlGeometryTypecast = "::geometry";
 
         /// <summary>
-        /// Создание сервиса данных для PostgreSQL без параметров.
-        /// </summary>
-        public GisPostgresDataService()
-        {
-        }
-
-        /// <summary>
-        /// Создание сервиса данных для PostgreSQL с указанием настроек проверки полномочий.
-        /// </summary>
-        /// <param name="securityManager">Сконструированный менеджер полномочий.</param>
-        public GisPostgresDataService(ISecurityManager securityManager)
-            : base(securityManager)
-        {
-        }
-
-        /// <summary>
         /// Создание сервиса данных для PostgreSQL с указанием настроек проверки полномочий.
         /// </summary>
         /// <param name="securityManager">Сенеджер полномочий.</param>
         /// <param name="auditService">Сервис аудита.</param>
-        public GisPostgresDataService(ISecurityManager securityManager, IAuditService auditService)
-            : base(securityManager, auditService)
+        /// <param name="businessServerProvider">The provider for <see cref="BusinessServer"/> creation.</param>
+        public GisPostgresDataService(ISecurityManager securityManager, IAuditService auditService, IBusinessServerProvider businessServerProvider)
+            : base(securityManager, auditService, businessServerProvider)
         {
         }
 
