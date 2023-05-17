@@ -111,7 +111,7 @@
                 }
 
                 // The SQL-expression returns EWKT representation of the property value.
-                selectClause.Append(sql.Substring(pos, scanText.Length).Replace(propName, $"ST_AsEWKT({propName}) as {propName}"));
+                selectClause.Append(sql.Substring(pos, scanText.Length));
                 lastPos = pos + scanText.Length;
             }
             if (lastPos < fromPos)

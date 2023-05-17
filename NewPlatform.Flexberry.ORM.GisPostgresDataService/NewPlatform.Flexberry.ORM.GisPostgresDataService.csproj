@@ -8,7 +8,7 @@
     <Company>New Platform Ltd.</Company>
     <PackageTags>ORM.GisPostgresDataService Flexberry</PackageTags>
     <VersionPrefix>2.1.0</VersionPrefix>
-    <VersionSuffix>beta03</VersionSuffix>
+    <VersionSuffix>beta04</VersionSuffix>
     <Product>NewPlatform.Flexberry.ORM.GisPostgresDataService</Product>
     <PackageId>NewPlatform.Flexberry.ORM.GisPostgresDataService</PackageId>
     <PackageProjectUrl>https://flexberry.net</PackageProjectUrl>
