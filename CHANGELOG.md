@@ -10,8 +10,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - Updated `Microsoft.Spatial` up to 7.10.0.
-- Updated `NewPlatform.Flexberry.ORM` up to 7.1.0-alpha01.
-- Updated `NewPlatform.Flexberry.ORM.PostgresDataService` up to 7.1.0-alpha01.
+- Updated `NewPlatform.Flexberry.ORM` up to 7.1.0-alpha02.
+- Updated `NewPlatform.Flexberry.ORM.PostgresDataService` up to 7.1.0-alpha02.
 
 ## [2.1.0] - 2023-05-18
 ### Added
