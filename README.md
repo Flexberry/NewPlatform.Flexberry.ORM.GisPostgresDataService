@@ -2,4 +2,4 @@
 
 Implementation of PostgreSQL (with PostGIS) data service supporting spatial types used in geographic information systems.
 
-Стенд с применением этого сервиса данных есть [здесь](https://github.com/Flexberry/ember-flexberry-gis)
+Stand using this data service is [here](https://github.com/Flexberry/ember-flexberry-gis).
