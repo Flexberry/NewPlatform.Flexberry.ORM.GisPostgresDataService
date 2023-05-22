@@ -4,11 +4,11 @@
     <Description>Flexberry ORM.GisPostgresDataService package.</Description>
     <Title>Flexberry ORM.GisPostgresDataService</Title>
     <Authors>New Platform Ltd.</Authors>
-    <Copyright>Copyright 2021 © New Platform Ltd.</Copyright>
+    <Copyright>Copyright 2023 © New Platform Ltd.</Copyright>
     <Company>New Platform Ltd.</Company>
     <PackageTags>ORM.GisPostgresDataService Flexberry</PackageTags>
-    <VersionPrefix>2.1.0</VersionPrefix>
-    <VersionSuffix>beta03</VersionSuffix>
+    <VersionPrefix>2.2.0</VersionPrefix>
+    <VersionSuffix>alpha01</VersionSuffix>
     <Product>NewPlatform.Flexberry.ORM.GisPostgresDataService</Product>
     <PackageId>NewPlatform.Flexberry.ORM.GisPostgresDataService</PackageId>
     <PackageProjectUrl>https://flexberry.net</PackageProjectUrl>
@@ -16,7 +16,12 @@
     <PackageLicenseUrl>https://flexberry.ru/License-FlexberryOrm-Runtime</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/Flexberry/NewPlatform.Flexberry.ORM.GisPostgresDataService</RepositoryUrl>
-    <PackageReleaseNotes>1. .NET Standard 2.0 implementation.</PackageReleaseNotes>
+    <PackageReleaseNotes>
+		Changed
+    - Updated `Microsoft.Spatial` up to 7.10.0.
+    - Updated `NewPlatform.Flexberry.ORM` up to 7.1.0-alpha01.
+    - Updated `NewPlatform.Flexberry.ORM.PostgresDataService` up to 7.1.
+	</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
