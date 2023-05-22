@@ -6,14 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 
 ### Fixed
+- Error with second extra sql replace.
 
 ### Changed
-
-## [2.1.1beta01] - 2023-05-22
-
-### Fixed
-
-- Error with second extra sql replace.
 
 ## [2.1.0] - 2023-05-18
 ### Added

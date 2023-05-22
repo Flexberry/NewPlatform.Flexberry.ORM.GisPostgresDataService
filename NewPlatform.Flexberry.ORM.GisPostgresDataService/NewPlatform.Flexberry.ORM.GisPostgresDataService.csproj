@@ -17,16 +17,9 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/Flexberry/NewPlatform.Flexberry.ORM.GisPostgresDataService</RepositoryUrl>
     <PackageReleaseNotes>
-    Added
-    - Feature GeoDistance is implemented.
-
-    Fixed
-    - Fix geography- and geometry-functions issues.
-
-    Changed
-    - Updated `NewPlatform.Flexberry.ORM` up to `6.1.0`.
-    - Updated `NewPlatform.Flexberry.ORM.PostgresDataService` up to `6.1.0`.
-    </PackageReleaseNotes>
+		Fixed
+		- Error with second extra sql replace.
+	</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
