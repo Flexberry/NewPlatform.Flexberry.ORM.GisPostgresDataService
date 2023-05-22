@@ -110,8 +110,20 @@
                     selectClause.Append(sql.Substring(lastPos, pos - lastPos));
                 }
 
+                string sqlReplace = $"ST_AsEWKT({propName}) as {propName}";
+
                 // The SQL-expression returns EWKT representation of the property value.
-                selectClause.Append(sql.Substring(pos, scanText.Length));
+                // Это условие добавлено, чтобы исключить случаи, когда данная замена происходит дважды.
+                // Ошибка, возможно, происходит из-за рассинхрона версий ORM.
+                if (sql.Contains(sqlReplace))
+                {
+                    selectClause.Append(sql.Substring(pos, scanText.Length));
+                }
+                else
+                {
+                    selectClause.Append(sql.Substring(pos, scanText.Length).Replace(propName, sqlReplace));
+                }
+
                 lastPos = pos + scanText.Length;
             }
             if (lastPos < fromPos)
