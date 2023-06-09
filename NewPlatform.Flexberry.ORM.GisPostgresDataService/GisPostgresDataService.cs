@@ -4,8 +4,6 @@
     using System.Linq;
     using System.Text;
 
-    using Microsoft.Spatial;
-
     using ICSSoft.STORMNET.Business;
     using ICSSoft.STORMNET.Business.Audit;
     using ICSSoft.STORMNET.Business.LINQProvider.Extensions;
@@ -14,6 +12,8 @@
     using ICSSoft.STORMNET.Security;
     using ICSSoft.STORMNET.Windows.Forms;
 
+    using Microsoft.Spatial;
+
     using STORMDO = ICSSoft.STORMNET;
 
     /// <summary>
@@ -21,6 +21,8 @@
     /// </summary>
     public class GisPostgresDataService : PostgresDataService
     {
+        private const string SqlGeographyTypecast = "::geography";
+        private const string SqlGeometryTypecast = "::geometry";
 
         /// <summary>
         /// Создание сервиса данных для PostgreSQL без параметров.
@@ -93,7 +95,7 @@
                 }
                 if (propStorage == null || propStorage.propertyType != typeof(Geography) && propStorage.propertyType != typeof(Geometry))
                     continue;
-                var propName = PutIdentifierIntoBrackets(prop.Name);
+                var propName = PutIdentifierIntoBrackets(prop.Name, true);
                 var scanText = $"{propName},";
                 int pos = sql.IndexOf(scanText, lastPos);
                 if (pos == -1)
@@ -107,7 +109,21 @@
                 {
                     selectClause.Append(sql.Substring(lastPos, pos - lastPos));
                 }
-                selectClause.Append(sql.Substring(pos, scanText.Length).Replace(propName, $"ST_AsEWKT({propName}) as {propName}"));
+
+                string sqlReplace = $"ST_AsEWKT({propName}) as {propName}";
+
+                // The SQL-expression returns EWKT representation of the property value.
+                // Это условие добавлено, чтобы исключить случаи, когда данная замена происходит дважды.
+                // Ошибка, возможно, происходит из-за рассинхрона версий ORM.
+                if (sql.Contains(sqlReplace))
+                {
+                    selectClause.Append(sql.Substring(pos, scanText.Length));
+                }
+                else
+                {
+                    selectClause.Append(sql.Substring(pos, scanText.Length).Replace(propName, sqlReplace));
+                }
+
                 lastPos = pos + scanText.Length;
             }
             if (lastPos < fromPos)
@@ -118,101 +134,95 @@
             return sql;
         }
 
-
         /// <summary>
-        /// конвертация значений в строки запроса
+        /// Осуществляет конвертацию заданного значения в строку запроса.
         /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
+        /// <param name="value">Значение для конвертации.</param>
+        /// <returns>Строка запроса.</returns>
         public override string ConvertValueToQueryValueString(object value)
         {
-            if (value != null && value.GetType().IsSubclassOf(typeof(Geography)))
-            {
-                Geography geo = value as Geography;
-                return $"ST_GeomFromEWKT('{geo.GetEWKT()}')";
-            }
-            if (value != null && value.GetType().IsSubclassOf(typeof(Geometry)))
-            {
-                Geometry geo = value as Geometry;
-                return $"ST_GeomFromEWKT('{geo.GetEWKT()}')";
-            }
-            return base.ConvertValueToQueryValueString(value);
+            // Assume further implicit type cast of the return value of the result SQL-expression.
+            return ConvertValue(value, false);
         }
 
         /// <summary>
-        /// Преобразовать значение в SQL строку
+        /// Осуществляет преобразование заданного значения в SQL-строку.
         /// </summary>
-        /// <param name="sqlLangDef">Определение языка ограничений</param>
-        /// <param name="value">Функция</param>
-        /// <param name="convertValue">делегат для преобразования констант</param>
-        /// <param name="convertIdentifier">делегат для преобразования идентификаторов</param>
-        /// <returns></returns>
+        /// <param name="sqlLangDef">Определение языка ограничений.</param>
+        /// <param name="value">Ограничивающая функция.</param>
+        /// <param name="convertValue">Делегат для преобразования констант.</param>
+        /// <param name="convertIdentifier">Делегат для преобразования идентификаторов.</param>
+        /// <returns>Результирующая SQL-строка.</returns>
         public override string FunctionToSql(
             SQLWhereLanguageDef sqlLangDef,
             Function value,
             delegateConvertValueToQueryValueString convertValue,
             delegatePutIdentifierToBrackets convertIdentifier)
         {
-            ExternalLangDef langDef = sqlLangDef as ExternalLangDef;
-            if (value.FunctionDef.StringedView == "GeoIntersects")
+            const string SqlDistanceFunction = "ST_Distance";
+            const string SqlIntersectsFunction = "ST_Intersects";
+
+            if (sqlLangDef == null)
             {
-                VariableDef varDef = null;
-                Geography geo = null;
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is Geography)
-                {
-                    varDef = value.Parameters[0] as VariableDef;
-                    geo = value.Parameters[1] as Geography;
-                }
-                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geography)
-                {
-                    varDef = value.Parameters[1] as VariableDef;
-                    geo = value.Parameters[0] as Geography;
-                }
-                if (varDef != null && geo != null)
-                {
-                    return $"ST_Intersects({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
-                }
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
-                {
-                    varDef = value.Parameters[0] as VariableDef;
-                    VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    return $"ST_Intersects({varDef.StringedView},{varDef2.StringedView})";
-                }
-                geo = value.Parameters[0] as Geography;
-                var geo2 = value.Parameters[0] as Geography;
-                return $"ST_Intersects(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
+                throw new ArgumentNullException(nameof(sqlLangDef));
             }
 
-            if (value.FunctionDef.StringedView == "GeomIntersects")
+            if (value == null)
             {
-                VariableDef varDef = null;
-                Geometry geo = null;
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is Geometry)
+                throw new ArgumentNullException(nameof(value));
+            }
+
+            ExternalLangDef langDef = sqlLangDef as ExternalLangDef;
+
+            var sqlFunction = string.Empty;
+            if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeomDistance)
+            {
+                sqlFunction = SqlDistanceFunction;
+            }
+            else if (value.FunctionDef.StringedView == langDef.funcGeoIntersects || value.FunctionDef.StringedView == langDef.funcGeomIntersects)
+            {
+                sqlFunction = SqlIntersectsFunction;
+            }
+
+            if (!string.IsNullOrEmpty(sqlFunction))
+            {
+                // The type of the return value of the identifier SQL-expression depends on the identifier type
+                // and in certain cases requires explicit type cast in order to call proper SQL-function overload.
+                var sqlTypecast = string.Empty;
+                if (value.FunctionDef.StringedView == langDef.funcGeoDistance || value.FunctionDef.StringedView == langDef.funcGeoIntersects)
                 {
-                    varDef = value.Parameters[0] as VariableDef;
-                    geo = value.Parameters[1] as Geometry;
+                    // The type of the return value of the identifier SQL-expression requires explicit type cast
+                    // due a geography-function parameter of the geography type may be stored as the geometry type.
+                    sqlTypecast = SqlGeographyTypecast;
                 }
-                else if (value.Parameters[1] is VariableDef && value.Parameters[0] is Geometry)
+
+                var sqlParameters = new string[2];
+                for (int i = 0; i < sqlParameters.Length; i++)
                 {
-                    varDef = value.Parameters[1] as VariableDef;
-                    geo = value.Parameters[0] as Geometry;
+                    sqlParameters[i] = value.Parameters[i] is VariableDef vd
+                        ? $"{PutIdentifierIntoBrackets(vd.StringedView, true)}{sqlTypecast}"
+                        : ConvertValue(value.Parameters[i], true);
                 }
-                if (varDef != null && geo != null)
-                {
-                    return $"ST_Intersects({varDef.StringedView},ST_GeomFromEWKT('{geo.GetEWKT()}'))";
-                }
-                if (value.Parameters[0] is VariableDef && value.Parameters[1] is VariableDef)
-                {
-                    varDef = value.Parameters[0] as VariableDef;
-                    VariableDef varDef2 = value.Parameters[1] as VariableDef;
-                    return $"ST_Intersects({varDef.StringedView},{varDef2.StringedView})";
-                }
-                geo = value.Parameters[0] as Geometry;
-                var geo2 = value.Parameters[0] as Geometry;
-                return $"ST_Intersects(ST_GeomFromEWKT('{geo.GetEWKT()}'),ST_GeomFromEWKT('{geo2.GetEWKT()}'))";
+
+                return $"{sqlFunction}({sqlParameters[0]},{sqlParameters[1]})";
             }
 
             return base.FunctionToSql(sqlLangDef, value, convertValue, convertIdentifier);
+        }
+
+        private string ConvertValue(object value, bool convertWithExplicitTypecast)
+        {
+            if (value is Geography geo)
+            {
+                return $"'{geo.GetEWKT()}'{(convertWithExplicitTypecast ? SqlGeographyTypecast : string.Empty)}";
+            }
+
+            if (value is Geometry geom)
+            {
+                return $"'{geom.GetEWKT()}'{(convertWithExplicitTypecast ? SqlGeometryTypecast : string.Empty)}";
+            }
+
+            return base.ConvertValueToQueryValueString(value);
         }
     }
 }

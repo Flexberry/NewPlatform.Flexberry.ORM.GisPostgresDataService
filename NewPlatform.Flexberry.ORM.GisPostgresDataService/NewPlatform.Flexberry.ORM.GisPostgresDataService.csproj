@@ -4,10 +4,11 @@
     <Description>Flexberry ORM.GisPostgresDataService package.</Description>
     <Title>Flexberry ORM.GisPostgresDataService</Title>
     <Authors>New Platform Ltd.</Authors>
-    <Copyright>Copyright 2021 © New Platform Ltd.</Copyright>
+    <Copyright>Copyright 2023 © New Platform Ltd.</Copyright>
     <Company>New Platform Ltd.</Company>
     <PackageTags>ORM.GisPostgresDataService Flexberry</PackageTags>
-    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionPrefix>2.1.1</VersionPrefix>
+    <VersionSuffix></VersionSuffix>
     <Product>NewPlatform.Flexberry.ORM.GisPostgresDataService</Product>
     <PackageId>NewPlatform.Flexberry.ORM.GisPostgresDataService</PackageId>
     <PackageProjectUrl>https://flexberry.net</PackageProjectUrl>
@@ -15,7 +16,10 @@
     <PackageLicenseUrl>https://flexberry.ru/License-FlexberryOrm-Runtime</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>git://github.com/Flexberry/NewPlatform.Flexberry.ORM.GisPostgresDataService</RepositoryUrl>
-    <PackageReleaseNotes>1. .NET Standard 2.0 implementation.</PackageReleaseNotes>
+    <PackageReleaseNotes>
+		Fixed
+		- Error with second extra sql replace.
+	</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
 
@@ -39,7 +43,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Spatial" Version="7.7.2" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="6.0.0" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="6.1.0" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="6.1.0" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
