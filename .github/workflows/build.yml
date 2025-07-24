@@ -25,8 +25,8 @@ jobs:
       - uses: actions/checkout@v2
         
       - name: NuGet Restore
-        run: nuget restore "NewPlatform.Flexberry.ORM.GisPostgresDataService.sln" -NonInteractive
+        run: dotnet restore "NewPlatform.Flexberry.ORM.GisPostgresDataService.sln"
                 
       - name: Compile code
-        run:  msbuild /verbosity:quiet /p:WarningLevel=0 /p:Configuration=Debug "NewPlatform.Flexberry.ORM.GisPostgresDataService.sln" 
+        run:  dotnet build "NewPlatform.Flexberry.ORM.GisPostgresDataService.sln" --no-restore --configuration Debug --verbosity quiet
 

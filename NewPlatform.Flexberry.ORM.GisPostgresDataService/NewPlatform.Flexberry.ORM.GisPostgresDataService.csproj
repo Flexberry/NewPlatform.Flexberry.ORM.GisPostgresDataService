@@ -7,8 +7,8 @@
     <Copyright>Copyright 2023 © New Platform Ltd.</Copyright>
     <Company>New Platform Ltd.</Company>
     <PackageTags>ORM.GisPostgresDataService Flexberry</PackageTags>
-    <VersionPrefix>2.2.0</VersionPrefix>
-    <VersionSuffix>alpha01</VersionSuffix>
+    <VersionPrefix>3.0.0</VersionPrefix>
+    <VersionSuffix>beta01</VersionSuffix>
     <Product>NewPlatform.Flexberry.ORM.GisPostgresDataService</Product>
     <PackageId>NewPlatform.Flexberry.ORM.GisPostgresDataService</PackageId>
     <PackageProjectUrl>https://flexberry.net</PackageProjectUrl>
@@ -19,8 +19,9 @@
     <PackageReleaseNotes>
 		Changed
 		- Updated `Microsoft.Spatial` up to 7.10.0.
-		- Updated `NewPlatform.Flexberry.ORM` up to 7.1.0-alpha02.
-		- Updated `NewPlatform.Flexberry.ORM.PostgresDataService` up to 7.1.0-alpha02.
+		- Updated `NewPlatform.Flexberry.ORM` up to 8.0.0-beta01.
+		- Updated `NewPlatform.Flexberry.ORM.PostgresDataService` up to 8.0.0-beta01.
+		- Changed constructor of `GisPostgresDataService` for Dependency Injection support (added `IBusinessServerProvider`).
 	</PackageReleaseNotes>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
   </PropertyGroup>
@@ -41,12 +42,14 @@
 
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <DebugType>None</DebugType>
+    <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Spatial" Version="7.10.0" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="7.2.0-alpha02" />
-    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="7.2.0-alpha02" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM" Version="8.0.0-beta01" />
+    <PackageReference Include="NewPlatform.Flexberry.ORM.PostgresDataService" Version="8.0.0-beta01" />
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
